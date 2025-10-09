@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36429.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SouthAfricanIDV", "Lib\SouthAfricanIDV.csproj", "{CE21A2DF-09BC-4772-AFAC-0C9966528893}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "Testing\ConsoleApp2.csproj", "{598D66EA-4084-47E5-A25D-0A524E74FC32}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE21A2DF-09BC-4772-AFAC-0C9966528893} = {CE21A2DF-09BC-4772-AFAC-0C9966528893}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE21A2DF-09BC-4772-AFAC-0C9966528893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE21A2DF-09BC-4772-AFAC-0C9966528893}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE21A2DF-09BC-4772-AFAC-0C9966528893}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE21A2DF-09BC-4772-AFAC-0C9966528893}.Release|Any CPU.Build.0 = Release|Any CPU
+		{598D66EA-4084-47E5-A25D-0A524E74FC32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{598D66EA-4084-47E5-A25D-0A524E74FC32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{598D66EA-4084-47E5-A25D-0A524E74FC32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{598D66EA-4084-47E5-A25D-0A524E74FC32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1EDFADB-27BC-4A20-9E39-7E014DB2A2BA}
+	EndGlobalSection
+EndGlobal
