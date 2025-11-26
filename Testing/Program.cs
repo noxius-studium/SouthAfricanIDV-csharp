@@ -30,6 +30,19 @@ namespace ConsoleApp2
             {
                 Console.WriteLine("Invalid ID number.");
             }
+            decoded = decoder.Decode("0001010000081");
+            if (decoded != null)
+            {
+                Console.WriteLine($"Valid ID: {decoded.IdNumber}");
+                Console.WriteLine($"Date of Birth: {decoded.AgeInfo?.DateOfBirth:yyyy-MM-dd}");
+                Console.WriteLine($"Age: {decoded.AgeInfo?.AgeString}");
+                Console.WriteLine($"Gender: {decoded.Gender}");
+                Console.WriteLine($"Older than 18: {decoded.AgeInfo.Years >= 18}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID number.");
+            }
         }
     }
 }

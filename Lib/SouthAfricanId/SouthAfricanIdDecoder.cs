@@ -9,24 +9,28 @@ namespace SouthAfricanId
     /// <summary>
     /// Decodes South African ID numbers and extracts information such as age and gender.
     /// </summary>
+
+    /// <summary>
+    /// Decodes South African ID numbers and extracts all available information.
+    /// </summary>
     public class SouthAfricanIdDecoder
     {
         private readonly Validator _validator;
         private readonly AgeExtraction _ageExtractor;
         private readonly GenderExtraction _genderExtractor;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SouthAfricanIdDecoder"/> class.
-        /// </summary>
-        public SouthAfricanIdDecoder()
+        public SouthAfricanIdDecoder(
+            Validator validator = null,
+            AgeExtraction ageExtractor = null,
+            GenderExtraction genderExtractor = null)
         {
-            _validator = new Validator();
-            _ageExtractor = new AgeExtraction();
-            _genderExtractor = new GenderExtraction();
+            _validator = validator ?? new Validator();
+            _ageExtractor = ageExtractor ?? new AgeExtraction();
+            _genderExtractor = genderExtractor ?? new GenderExtraction();
         }
 
         /// <summary>
-        /// Decodes the specified ID number and extracts age and gender information.
+        /// Decodes the specified ID number and extracts all available information.
         /// </summary>
         /// <param name="idNumber">The South African ID number to decode.</param>
         /// <returns>A <see cref="DecodedIdModel"/> containing the extracted information, or null if invalid.</returns>
@@ -36,11 +40,24 @@ namespace SouthAfricanId
                 return null;
             var ageInfo = _ageExtractor.Extract(idNumber);
             var gender = _genderExtractor.Extract(idNumber);
+            // Extract citizenship and historical digit
+            bool? isCitizen = null;
+            int? citizenshipDigit = null;
+            int? historicalDigit = null;
+            if (!string.IsNullOrEmpty(idNumber) && idNumber.Length == 13)
+            {
+                citizenshipDigit = int.Parse(idNumber.Substring(10, 1));
+                isCitizen = citizenshipDigit == 0;
+                historicalDigit = int.Parse(idNumber.Substring(11, 1));
+            }
             return new DecodedIdModel
             {
                 IdNumber = idNumber,
                 AgeInfo = ageInfo,
                 Gender = gender,
+                IsCitizen = isCitizen,
+                CitizenshipDigit = citizenshipDigit,
+                HistoricalDigit = historicalDigit
             };
         }
     }
@@ -64,6 +81,21 @@ namespace SouthAfricanId
         /// Gets or sets the extracted gender information.
         /// </summary>
         public Gender Gender { get; set; }
+
+        /// <summary>
+        /// Gets or sets the citizenship status (true = citizen, false = permanent resident, null = unknown).
+        /// </summary>
+        public bool? IsCitizen { get; set; }
+
+        /// <summary>
+        /// Gets or sets the citizenship digit (0 or 1).
+        /// </summary>
+        public int? CitizenshipDigit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the historical digit (0-9).
+        /// </summary>
+        public int? HistoricalDigit { get; set; }
     }
 
 

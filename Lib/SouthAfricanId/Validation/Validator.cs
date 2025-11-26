@@ -15,49 +15,71 @@ namespace SouthAfricanId.Validation
         /// </summary>
         /// <param name="idNumber">The ID number to validate.</param>
         /// <returns>True if the ID number is valid; otherwise, false.</returns>
-        public virtual bool ValidateIdNumber(string idNumber)
+
+        /// <summary>
+        /// Checks if the ID number is 13 digits and numeric.
+        /// </summary>
+        public bool IsFormatValid(string idNumber)
         {
-            if (string.IsNullOrEmpty(idNumber) || !idNumber.All(char.IsDigit))
+            return !string.IsNullOrEmpty(idNumber) && idNumber.Length == 13 && idNumber.All(char.IsDigit);
+        }
+
+        /// <summary>
+        /// Validates the Luhn checksum for the ID number.
+        /// </summary>
+        public bool IsLuhnValid(string idNumber)
+        {
+            if (!IsFormatValid(idNumber))
                 return false;
-
             int[] digits = idNumber.Select(c => c - '0').ToArray();
-            int checksum = 0;
-            int parity = digits.Length % 2;
-
-            for (int i = 0; i < digits.Length; i++)
+            int total = 0;
+            for (int i = 0; i < 12; i++)
             {
-                int digit = digits[i];
-                if (i % 2 == parity)
+                int d = digits[i];
+                if (i % 2 == 1) // every second digit from the left
                 {
-                    digit *= 2;
-                    if (digit > 9)
-                    {
-                        digit -= 9;
-                    }
+                    d *= 2;
+                    if (d > 9) d -= 9;
                 }
-                checksum += digit;
+                total += d;
             }
-            return checksum % 10 == 0;
+            int checkDigit = (10 - (total % 10)) % 10;
+            return checkDigit == digits[12];
         }
 
 
-        public virtual bool IsValidIdNumberDate(string idNumber)
+
+        /// <summary>
+        /// Validates the birthdate encoded in the ID number (YYMMDD, not in the future).
+        /// </summary>
+        public bool IsBirthdateValid(string idNumber)
         {
-            if (string.IsNullOrEmpty(idNumber) || !idNumber.All(char.IsDigit))
-                return false;
-            if (idNumber.Length < 6)
+            if (!IsFormatValid(idNumber))
                 return false;
             string datePart = idNumber.Substring(0, 6);
-            if (DateTime.TryParseExact(datePart, "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime date))
+            int year = int.Parse(datePart.Substring(0, 2));
+            int month = int.Parse(datePart.Substring(2, 2));
+            int day = int.Parse(datePart.Substring(4, 2));
+            int currentYear2 = DateTime.Now.Year % 100;
+            int century = (year > currentYear2) ? 1900 : 2000;
+            year += century;
+            try
             {
-                return date <= DateTime.Now;
+                var dob = new DateTime(year, month, day);
+                return dob <= DateTime.Now;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
         }
 
+        /// <summary>
+        /// Validates the ID number for format, date, and Luhn checksum.
+        /// </summary>
         public virtual bool Validate(string idNumber)
         {
-            return ValidateIdNumber(idNumber) && IsValidIdNumberDate(idNumber);
+            return IsFormatValid(idNumber) && IsBirthdateValid(idNumber) && IsLuhnValid(idNumber);
         }
     }
 

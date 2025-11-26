@@ -13,6 +13,11 @@ namespace SouthAfricanId.Extraction
         /// </summary>
         /// <param name="idNumber">The South African ID number.</param>
         /// <returns>An <see cref="AgeInformation"/> object if extraction is successful; otherwise, null.</returns>
+        /// <summary>
+        /// Extracts age information from a valid South African ID number.
+        /// </summary>
+        /// <param name="idNumber">The South African ID number (must be validated first).</param>
+        /// <returns>AgeInformation if extraction is successful; otherwise, null.</returns>
         public virtual AgeInformation Extract(string idNumber)
         {
             if (string.IsNullOrEmpty(idNumber) || idNumber.Length < 6)
@@ -26,7 +31,9 @@ namespace SouthAfricanId.Extraction
                 int century = (year > currentYear2) ? 1900 : 2000;
                 year += century;
                 var dob = new DateTime(year, month, day);
-                return dob <= DateTime.Now ? new AgeInformation(dob) : null;
+                if (dob > DateTime.Now)
+                    return null;
+                return new AgeInformation(dob);
             }
             catch
             {
